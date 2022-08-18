@@ -1,5 +1,4 @@
-const orez = require("../../orez");
-const nock = require('nock');
+var orez = require("../../orez");
 require('should');
 
 const zapier = require('zapier-platform-core');
@@ -7,7 +6,9 @@ const zapier = require('zapier-platform-core');
 const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
-describe('Trigger - contact_created', () => {
+const nock = require('nock');
+
+describe('Trigger - field_definition_lookup', () => {
   zapier.tools.env.inject();
 
   it('should get an array', async () => {
@@ -17,17 +18,19 @@ describe('Trigger - contact_created', () => {
         refresh_token: process.env.REFRESH_TOKEN,
       },
 
-      cleanedRequest: {
-        entity_id: 1
-      },
+      inputData: {},
     };
 
     nock(orez.API_ROOT)
-      .get("/v2/guests/1")
-      .reply(200, App.triggers['contact_created'].operation.sample);
+      .get('/v2/fielddefinitions')
+      .query(bundle.inputData)
+      .reply(200, orez.MockList([
+        { name: 'name 1', description: 'directions 1', id: 1 },
+        { name: 'name 2', description: 'directions 2', id: 2 },
+      ]));
 
     const results = await appTester(
-      App.triggers['contact_created'].operation.perform,
+      App.triggers['field_definition_lookup'].operation.perform,
       bundle
     );
     results.should.be.an.Array();

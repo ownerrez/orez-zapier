@@ -1,30 +1,12 @@
+const orez = require("../orez");
+
 const perform = async (z, bundle) => {
-  const options = {
-    url:
-      'https://api.ownerreservations.com/v2/bookings/' +
-      bundle.cleanedRequest.entity_id,
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-
-    return [response.json];
-  });
+  return orez.GetItems(z, bundle, { resource: 'v2/bookings/' + bundle.cleanedRequest.entity_id })
+    .then((item) => [item]);
 };
 
 const performList = async (z, bundle) => {
-  function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
-
+  //orez.GetItems
   const options = {
     url:
       'https://api.ownerreservations.com/v2/bookings?include_tags=true&include_fields=true&since_utc=' +

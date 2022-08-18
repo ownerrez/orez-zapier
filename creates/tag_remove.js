@@ -1,16 +1,17 @@
-const perform = async (z, bundle) => {
-  orez.CleanIds([ bundle.inputData.entity_id ]);
+var orez = require("../orez");
 
+const perform = async (z, bundle) => {
   const getOptions = {
     resource: "v2/tags", 
     params: { 
       entity_type: bundle.inputData.entity_type, 
-      entity_id: bundle.inputData.entity_id 
-    }, 
-    isMatch: (item) => item.name == bundle.inputData.name
+      entity_id: orez.CleanId(bundle.inputData.entity_id)
+    }
   };
 
-  return orez.GetItem(z, bundle, getOptions).then((matchingItem) => {
+  return orez.GetItems(z, bundle, getOptions)
+    .then((items) => orez.FirstOrDefault(items, (item) => item.name == bundle.inputData.name))
+    .then((matchingItem) => {
       if (matchingItem === null) {
         return { status: 'No content', status_code: 204 };
       } 

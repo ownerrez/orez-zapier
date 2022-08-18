@@ -1,3 +1,5 @@
+const orez = require("../../orez");
+const nock = require('nock');
 require('should');
 
 const zapier = require('zapier-platform-core');
@@ -15,8 +17,14 @@ describe('Trigger - booking_updated', () => {
         refresh_token: process.env.REFRESH_TOKEN,
       },
 
-      inputData: {},
+      cleanedRequest: {
+        entity_id: 1
+      },
     };
+
+    nock(orez.API_ROOT)
+      .get("/v2/bookings/1")
+      .reply(200, App.triggers['booking_updated'].operation.sample);
 
     const results = await appTester(
       App.triggers['booking_updated'].operation.perform,

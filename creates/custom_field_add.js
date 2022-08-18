@@ -1,3 +1,5 @@
+var orez = require("../orez");
+
 const perform = async (z, bundle) => {
   orez.CleanIds([ bundle.inputData.entity_id ]);
 
@@ -6,31 +8,32 @@ const perform = async (z, bundle) => {
     params: {
       entity_type: bundle.inputData.entity_type,
       entity_id: bundle.inputData.entity_id,
-    },
-    isMatch: (item) => item.field_definition_id == bundle.inputData.field_definition_id
+    }
   };
 
-  orez.GetItem(z, bundle, getOptions).then((matchingItem) => {
-    if (matchingItem === null) {
-      return orez.PostItem(z, bundle, {
-        resource: "v2/fields",
-        body: {
-          entity_type: bundle.inputData.entity_type,
-          entity_id: bundle.inputData.entity_id,
-          value: bundle.inputData.value,
-          field_definition_id: bundle.inputData.field_definition_id,
-        }
-      });
-    }
-    else {
-      return orez.PatchItem(z, bundle, {
-        resource: "v2/fields/" + matchingItem.id,
-        body: {
-          value: bundle.inputData.value,
-        }
-      });
-    }
-  });
+  return orez.GetItems(z, bundle, getOptions)
+    .then((items) => orez.FirstOrDefault(items, (item) => item.field_definition_id == bundle.inputData.field_definition_id))
+    .then((matchingItem) => {
+      if (matchingItem === null) {
+        return orez.PostItem(z, bundle, {
+          resource: "v2/fields",
+          body: {
+            entity_type: bundle.inputData.entity_type,
+            entity_id: bundle.inputData.entity_id,
+            value: bundle.inputData.value,
+            field_definition_id: bundle.inputData.field_definition_id,
+          }
+        });
+      }
+      else {
+        return orez.PatchItem(z, bundle, {
+          resource: "v2/fields/" + matchingItem.id,
+          body: {
+            value: bundle.inputData.value,
+          }
+        });
+      }
+    });
 };
 
 const getInputFields = async (z, bundle) => {

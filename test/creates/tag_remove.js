@@ -1,3 +1,5 @@
+const orez = require("../../orez");
+const nock = require('nock');
 require('should');
 
 const zapier = require('zapier-platform-core');
@@ -15,8 +17,26 @@ describe('Create - tag_remove', () => {
         refresh_token: process.env.REFRESH_TOKEN,
       },
 
-      inputData: {},
+      inputData: {
+        entity_type: "booking",
+        entity_id: "orp1",
+        name: "test tag",
+      },
     };
+
+    nock(orez.API_ROOT)
+      .get('/v2/tags')
+      .query({
+        entity_type: "booking",
+        entity_id: 1
+      })
+      .reply(200, orez.MockList([
+        { name: "test tag", id: 3 }
+      ]));
+    
+    nock(orez.API_ROOT)
+      .delete('/v2/tags/3')
+      .reply(200, App.creates['tag_remove'].operation.sample);
 
     const result = await appTester(
       App.creates['tag_remove'].operation.perform,

@@ -1,3 +1,5 @@
+const orez = require("../../orez");
+const nock = require('nock');
 require('should');
 
 const zapier = require('zapier-platform-core');
@@ -15,8 +17,20 @@ describe('Create - custom_field_add', () => {
         refresh_token: process.env.REFRESH_TOKEN,
       },
 
-      inputData: {},
+      inputData: {
+        entity_type: "booking",
+        entity_id: 1
+      },
     };
+
+    nock(orez.API_ROOT)
+      .get('/v2/fields')
+      .query(bundle.inputData)
+      .reply(200, orez.MockList([]));
+    
+    nock(orez.API_ROOT)
+      .post('/v2/fields')
+      .reply(200, App.creates['custom_field_add'].operation.sample);
 
     const result = await appTester(
       App.creates['custom_field_add'].operation.perform,

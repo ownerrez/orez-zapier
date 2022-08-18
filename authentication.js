@@ -1,8 +1,10 @@
+const orez = require("./orez");
+
 module.exports = {
   type: 'oauth2',
   test: {
     headers: { Authorization: 'Bearer {{bundle.authData.access_token}}' },
-    url: `${API_ROOT}/v2/users/me`,
+    url: `${orez.API_ROOT}/v2/users/me`,
   },
   oauth2Config: {
     authorizeUrl: {

@@ -6,7 +6,7 @@ The [Zapier Platform CLI](https://github.com/zapier/zapier-platform/blob/master/
 
 ### Writing Tests
 
-Tests are written in mocha.js with [should.js](https://shouldjs.github.io/) for assertions.
+Tests are written in [mocha.js](https://mochajs.org/) with [should.js](https://shouldjs.github.io/) for assertions.
 
 Unit tests should utilize [nock.js](https://github.com/nock/nock/blob/main/README.md) to mock API requests. See working tests as examples. 
 

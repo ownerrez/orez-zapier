@@ -24,7 +24,12 @@ Or use mocha directly to run a subset of tests:
 mocha --recursive -g "<filter tests>"
 ```
 
-If using powershell, you can set environment variables as:
-```powershell
-$env:AUTH_USERNAME='your@user.name'; $env:AUTH_PASSWORD='pt_yourpersonaltoken';
+Set environment variables in the `.env` file. This file should never be committed to git. These variables are not deployed to Zapier.
+```
+AUTH_USERNAME=your@user.name
+AUTH_PASSWORD=pt_yourpersonaltoken
+API_ROOT=https://api.dev.ownerreservations.com
+
+# Tell node not to validate personally signed cert
+NODE_TLS_REJECT_UNAUTHORIZED=0
 ```

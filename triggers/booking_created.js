@@ -1,17 +1,13 @@
 const orez = require("../orez");
+const helpers = require("../orez_helpers");
 
 const perform = async (z, bundle) => {
-  return orez.GetItems(z, bundle, { resource: 'v2/bookings/' + bundle.cleanedRequest.entity_id })
-    .then((item) => [item]);
+  return orez.GetItems(z, bundle, `v2/bookings/${bundle.cleanedRequest.entity_id}`)
+    .then((result) => [result]);
 };
 
 const performList = async (z, bundle) => {
-  return orez.GetItems(z, bundle, 'v2/bookings?include_tags=true&include_fields=true&since_utc=' + orez.AddDays(new Date(), -180).toJSON());
-};
-
-const performUnsubscribe = async (z, bundle) => {
-  return orez.DeleteItem(z, bundle, `v2/webhooksubscriptions/${bundle.subscribeData.id}`)
-    .then(x => { return {}; });
+  return orez.GetItems(z, bundle, `v2/bookings?include_tags=true&include_fields=true&since_utc=${orez.AddDays(new Date(), -180).toJSON()}`);
 };
 
 module.exports = {
@@ -20,21 +16,11 @@ module.exports = {
     canPaginate: false,
     type: 'hook',
     performList: performList,
-    performSubscribe: {
-      body: {
-        webhook_url: '{{bundle.targetUrl}}',
-        type: 'Booking',
-        action: 'EntityCreate',
-      },
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: 'Bearer {{bundle.authData.access_token}}',
-      },
-      method: 'POST',
-      url: process.env.API_ROOT + '/v2/webhooksubscriptions',
-    },
-    performUnsubscribe: performUnsubscribe,
+    performSubscribe: helpers.BuildPerformSubscribe({
+      type: 'Booking',
+      action: 'EntityCreate',
+    }),
+    performUnsubscribe: helpers.PerformUnsubscribe,
     sample: {
       adults: 1,
       arrival: '2022-04-28',

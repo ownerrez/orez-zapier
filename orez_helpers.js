@@ -97,7 +97,27 @@ const getFieldDefinitionEntityInputs = async (z, bundle) => {
     });
 };
 
+const buildPerformSubscribe = (body) => {
+  return async (z, bundle) => {
+    const fullBody = {
+      ...body,
+      webhook_url: bundle.targetUrl
+    }; 
+
+    return orez.PostItem(z, bundle, {
+      resource: `v2/webhooksubscriptions`,
+      body: fullBody
+    });
+  };
+};
+
+const performUnsubscribe = async (z, bundle) => {
+  return orez.DeleteItem(z, bundle, `v2/webhooksubscriptions/${bundle.subscribeData.id}`);
+};
+
 module.exports = {
   GetFieldDefinitionEntityInputs: getFieldDefinitionEntityInputs,
-  GetEntityIdInput: getEntityIdInput
+  GetEntityIdInput: getEntityIdInput,
+  BuildPerformSubscribe: buildPerformSubscribe,
+  PerformUnsubscribe: performUnsubscribe,
 };

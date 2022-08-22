@@ -1,75 +1,13 @@
+const orez = require("../orez");
+const helpers = require("../orez_helpers");
+
 const perform = async (z, bundle) => {
-  const options = {
-    url:
-      process.env.API_ROOT + '/v2/guests/' +
-      bundle.cleanedRequest.entity_id,
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-
-    return [response.json];
-  });
+  return orez.GetItems(z, bundle, `v2/guests/${bundle.cleanedRequest.entity_id}`)
+    .then((result) => [result]);
 };
 
 const performList = async (z, bundle) => {
-  function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
-
-  const options = {
-    url:
-      process.env.API_ROOT + '/v2/guests?include_tags=true&include_fields=true&created_since_utc=' +
-      addDays(new Date(), -180).toJSON(),
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-    const results = response.json;
-
-    // You can do any parsing you need for results here before returning them
-
-    return results.items;
-  });
-};
-
-const performUnsubscribe = async (z, bundle) => {
-  const options = {
-    url: `${process.env.API_ROOT}/v2/webhooksubscriptions/${bundle.subscribeData.id}`,
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-    body: {
-      hookUrl: bundle.subscribeData.id,
-    },
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-    const results = response.json;
-
-    // You can do any parsing you need for results here before returning them
-
-    return {};
-  });
+  return orez.GetItems(z, bundle, `v2/guests?include_tags=true&include_fields=true&created_since_utc=${orez.AddDays(new Date(), -180).toJSON()}`);
 };
 
 module.exports = {
@@ -77,21 +15,11 @@ module.exports = {
     perform: perform,
     type: 'hook',
     performList: performList,
-    performSubscribe: {
-      body: {
-        webhook_url: '{{bundle.targetUrl}}',
-        type: 'Guest',
-        action: 'EntityUpdate',
-      },
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: 'Bearer {{bundle.authData.access_token}}',
-      },
-      method: 'POST',
-      url: process.env.API_ROOT + '/v2/webhooksubscriptions',
-    },
-    performUnsubscribe: performUnsubscribe,
+    performSubscribe: helpers.BuildPerformSubscribe({
+      type: 'Guest',
+      action: 'EntityUpdate',
+    }),
+    performUnsubscribe: helpers.PerformUnsubscribe,
     sample: {
       addresses: [
         {

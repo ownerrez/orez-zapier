@@ -24,7 +24,7 @@ describe('Create - tag_remove', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get('/v2/tags')
       .query({
         entity_type: "booking",
@@ -34,7 +34,7 @@ describe('Create - tag_remove', () => {
         { name: "test tag", id: 3 }
       ]));
     
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .delete('/v2/tags/3')
       .reply(200, App.creates['tag_remove'].operation.sample);
 
@@ -42,6 +42,31 @@ describe('Create - tag_remove', () => {
       App.creates['tag_remove'].operation.perform,
       bundle
     );
+
     result.should.not.be.an.Array();
+    
+    nock.cleanAll();
+    nock.enableNetConnect();
   });
+  
+  if (process.env.AUTH_USERNAME)
+  {
+    // For integration testing, use username and personal token instead of oauth
+    it("should load secondary field object", async () => {
+      const bundle = {
+        authData: {},
+        inputData: {
+          entity_type: "booking",
+        },
+      };
+
+      const result = await appTester(
+        App.creates['tag_remove'].operation.inputFields[1],
+        bundle
+      );
+
+      result.should.be.an.Object();
+      result.key.should.equal("entity_id");
+    });
+  }
 });

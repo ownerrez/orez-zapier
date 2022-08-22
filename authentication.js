@@ -4,7 +4,7 @@ module.exports = {
   type: 'oauth2',
   test: {
     headers: { Authorization: 'Bearer {{bundle.authData.access_token}}' },
-    url: `${orez.API_ROOT}/v2/users/me`,
+    url: `${process.env.API_ROOT}/v2/users/me`,
   },
   oauth2Config: {
     authorizeUrl: {

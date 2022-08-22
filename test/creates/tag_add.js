@@ -24,7 +24,7 @@ describe('Create - tag_add', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get('/v2/tags')
       .query({
         entity_type: "booking",
@@ -32,7 +32,7 @@ describe('Create - tag_add', () => {
       })
       .reply(200, orez.MockList([]));
     
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .post('/v2/tags')
       .reply(200, App.creates['tag_add'].operation.sample);
 

@@ -1,4 +1,5 @@
 var orez = require("../orez");
+var helpers = require("../orez_helpers");
 
 const perform = async (z, bundle) => {
   const getOptions = {
@@ -54,17 +55,9 @@ module.exports = {
         ],
         required: true,
         list: false,
-        altersDynamicFields: false,
+        altersDynamicFields: true,
       },
-      {
-        key: 'entity_id',
-        label: 'Record ID',
-        type: 'integer',
-        helpText: 'The ID of the record you wish to tag.',
-        required: true,
-        list: false,
-        altersDynamicFields: false,
-      },
+      helpers.GetEntityIdInput,
       {
         key: 'name',
         label: 'Tag',

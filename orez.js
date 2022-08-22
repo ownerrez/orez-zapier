@@ -1,17 +1,24 @@
-const API_ROOT = "https://api.ownerreservations.com";
-
 const buildRequest = function (resource, method, bundle, params) {
   if (resource && resource[0] != "/") 
     resource = "/" + resource;
 
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  };
+
+  if (bundle.authData.access_token) {
+    headers.Authorization = `Bearer ${bundle.authData.access_token}`;
+  }
+  else if (process.env.AUTH_USERNAME && process.env.AUTH_PASSWORD) {
+    const token = Buffer.from(`${process.env.AUTH_USERNAME}:${process.env.AUTH_PASSWORD}`).toString("base64");
+    headers.Authorization = `Basic ${token}`;
+  }
+
   const options = {
-    url: `${API_ROOT}${resource}`,
+    url: `${process.env.API_ROOT}${resource}`,
     method: method,
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "Authorization": `Bearer ${bundle.authData.access_token}`,
-    },
+    headers: headers,
   };
 
   if (params) 
@@ -27,8 +34,6 @@ const cleanId = function(id) {
 };
 
 module.exports = {
-  API_ROOT: API_ROOT,
-  
   BuildRequest: buildRequest,
   CleanId: cleanId,
   CleanIds: function (ids) {

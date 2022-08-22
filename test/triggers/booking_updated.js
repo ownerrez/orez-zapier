@@ -22,7 +22,7 @@ describe('Trigger - booking_updated', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get("/v2/bookings/1")
       .reply(200, App.triggers['booking_updated'].operation.sample);
 

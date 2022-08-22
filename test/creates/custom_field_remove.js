@@ -24,7 +24,7 @@ describe('Create - custom_field_remove', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get('/v2/fields')
       .query({
         entity_id: bundle.inputData.entity_id,
@@ -36,7 +36,7 @@ describe('Create - custom_field_remove', () => {
         { field_definition_id: 6, id: 7 }
       ]));
     
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .delete('/v2/fields/5')
       .reply(200, App.creates['custom_field_remove'].operation.sample);
 
@@ -44,6 +44,32 @@ describe('Create - custom_field_remove', () => {
       App.creates['custom_field_remove'].operation.perform,
       bundle
     );
+
     result.should.not.be.an.Array();
+    
+    nock.cleanAll();
+    nock.enableNetConnect();
   });
+  
+  if (process.env.AUTH_USERNAME)
+  {
+    // For integration testing, use username and personal token instead of oauth
+    it("should load secondary fields array", async () => {
+      const bundle = {
+        authData: {},
+        inputData: {
+          field_definition_id: 294928057,
+        },
+      };
+
+      const result = await appTester(
+        App.creates['custom_field_remove'].operation.inputFields[1],
+        bundle
+      );
+
+      result.should.be.an.Array();
+      result[0].key.should.equal("entity_type");
+      result[1].key.should.equal("entity_id");
+    });
+  }
 });

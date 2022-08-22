@@ -22,7 +22,7 @@ describe('Trigger - contact_updated', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get("/v2/guests/1")
       .reply(200, App.triggers['contact_updated'].operation.sample);
 

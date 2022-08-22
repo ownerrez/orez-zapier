@@ -1,7 +1,7 @@
 const perform = async (z, bundle) => {
   const options = {
     url:
-      'https://api.ownerreservations.com/v2/bookings/' +
+      process.env.API_ROOT + '/v2/bookings/' +
       bundle.cleanedRequest.entity_id,
     method: 'GET',
     headers: {
@@ -27,7 +27,7 @@ const performList = async (z, bundle) => {
 
   const options = {
     url:
-      'https://api.ownerreservations.com/v2/bookings?include_tags=true&include_fields=true&since_utc=' +
+      process.env.API_ROOT + '/v2/bookings?include_tags=true&include_fields=true&since_utc=' +
       addDays(new Date(), -180).toJSON(),
     method: 'GET',
     headers: {
@@ -49,7 +49,7 @@ const performList = async (z, bundle) => {
 
 const performUnsubscribe = async (z, bundle) => {
   const options = {
-    url: `https://api.ownerreservations.com/v2/webhooksubscriptions/${bundle.subscribeData.id}`,
+    url: `${process.env.API_ROOT}/v2/webhooksubscriptions/${bundle.subscribeData.id}`,
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ module.exports = {
         Authorization: 'Bearer {{bundle.authData.access_token}}',
       },
       method: 'POST',
-      url: 'https://api.ownerreservations.com/v2/webhooksubscriptions',
+      url: process.env.API_ROOT + '/v2/webhooksubscriptions',
     },
     performUnsubscribe: performUnsubscribe,
     sample: {

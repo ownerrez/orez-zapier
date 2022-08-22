@@ -21,7 +21,7 @@ describe('Trigger - field_definition_lookup', () => {
       inputData: {},
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get('/v2/fielddefinitions')
       .query(bundle.inputData)
       .reply(200, orez.MockList([

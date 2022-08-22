@@ -23,12 +23,12 @@ describe('Create - custom_field_add', () => {
       },
     };
 
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .get('/v2/fields')
       .query(bundle.inputData)
       .reply(200, orez.MockList([]));
     
-    nock(orez.API_ROOT)
+    nock(process.env.API_ROOT)
       .post('/v2/fields')
       .reply(200, App.creates['custom_field_add'].operation.sample);
 

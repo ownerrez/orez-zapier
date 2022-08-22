@@ -6,50 +6,12 @@ const perform = async (z, bundle) => {
 };
 
 const performList = async (z, bundle) => {
-  //orez.GetItems
-  const options = {
-    url:
-      'https://api.ownerreservations.com/v2/bookings?include_tags=true&include_fields=true&since_utc=' +
-      addDays(new Date(), -180).toJSON(),
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-    const results = response.json;
-
-    // You can do any parsing you need for results here before returning them
-
-    return results.items;
-  });
+  return orez.GetItems(z, bundle, 'v2/bookings?include_tags=true&include_fields=true&since_utc=' + orez.AddDays(new Date(), -180).toJSON());
 };
 
 const performUnsubscribe = async (z, bundle) => {
-  const options = {
-    url: `https://api.ownerreservations.com/v2/webhooksubscriptions/${bundle.subscribeData.id}`,
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${bundle.authData.access_token}`,
-    },
-    params: {},
-    body: {},
-  };
-
-  return z.request(options).then((response) => {
-    response.throwForStatus();
-    const results = response.json;
-
-    // You can do any parsing you need for results here before returning them
-
-    return {};
-  });
+  return orez.DeleteItem(z, bundle, `v2/webhooksubscriptions/${bundle.subscribeData.id}`)
+    .then(x => { return {}; });
 };
 
 module.exports = {
@@ -70,7 +32,7 @@ module.exports = {
         Authorization: 'Bearer {{bundle.authData.access_token}}',
       },
       method: 'POST',
-      url: 'https://api.ownerreservations.com/v2/webhooksubscriptions',
+      url: process.env.API_ROOT + '/v2/webhooksubscriptions',
     },
     performUnsubscribe: performUnsubscribe,
     sample: {

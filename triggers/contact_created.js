@@ -2,8 +2,7 @@ const orez = require("../orez");
 const helpers = require("../orez_helpers");
 
 const perform = async (z, bundle) => {
-  return orez.GetItems(z, bundle, `v2/guests/${bundle.cleanedRequest.entity_id}`)
-    .then((result) => [result]);
+  return orez.GetItems(z, bundle, `v2/guests/${bundle.cleanedRequest.entity_id}`);
 };
 
 const performList = async (z, bundle) => {

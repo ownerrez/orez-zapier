@@ -72,28 +72,35 @@ const getEntityIdInput = async (z, bundle) => {
 
 const getFieldDefinitionEntityInputs = async (z, bundle) => {
   return orez.GetItems(z, bundle, "v2/fielddefinitions/" + bundle.inputData.field_definition_id)
-    .then((fieldDefinition) => {
-      if (fieldDefinition.type == "account") {
-        return [
-          { key: "entity_type", computed: true, default: "user" },
-          { key: "entity_id", computed: true, default: 1 }
-        ];
+    .then((fieldDefinitions) => {
+      if (fieldDefinitions.length > 0) {
+        const fieldDefinition = fieldDefinitions[0];
+
+        if (fieldDefinition.type == "account") {
+          return [
+            { key: "entity_type", computed: true, default: "user" },
+            { key: "entity_id", computed: true, default: 1 }
+          ];
+        }
+
+        var fields = [];
+
+        if (fieldDefinition.type == "contact")
+          fields.push({ key: "entity_type", computed: true, default: "guest" });
+        else
+          fields.push({ key: "entity_type", computed: true, default: fieldDefinition.type });
+
+        return getEntityIdInputByType(z, bundle, fieldDefinition.type)
+          .then((idField) => {
+            idField.helpText = `The ${fieldDefinition.type} for which to clear the "${fieldDefinition.name}" custom field.`;
+            fields[fields.length] = idField;
+
+            return fields;
+          });
       }
-
-      var fields = [];
-
-      if (fieldDefinition.type == "contact")
-        fields.push({ key: "entity_type", computed: true, default: "guest" });
-      else
-        fields.push({ key: "entity_type", computed: true, default: fieldDefinition.type });
-
-      return getEntityIdInputByType(z, bundle, fieldDefinition.type)
-        .then((idField) => {
-          idField.helpText = `The ${fieldDefinition.type} for which to clear the "${fieldDefinition.name}" custom field.`;
-          fields[fields.length] = idField;
-
-          return fields;
-        });
+      else {
+        return [];
+      }
     });
 };
 

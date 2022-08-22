@@ -75,7 +75,7 @@ module.exports = {
       if (response.json.items)
         return response.json.items;
       else
-        return response.json;
+        return [response.json];
     });
   },
   PostItem: async (z, bundle, options) => {

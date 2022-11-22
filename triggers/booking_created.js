@@ -44,7 +44,6 @@ module.exports = {
       children: 0,
       departure: '2022-05-04',
       guest_id: 34013,
-      has_problem: false,
       id: 273491,
       infants: 0,
       is_block: false,

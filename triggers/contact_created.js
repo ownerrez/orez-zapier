@@ -20,9 +20,6 @@ module.exports = {
     }),
     performUnsubscribe: helpers.PerformUnsubscribe,
     sample: {
-      email_addresses: [
-        { address: 'guest@orez.io', id: 123, is_default: false },
-      ],
       first_name: 'First',
       id: 123,
       last_name: 'Last',

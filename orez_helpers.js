@@ -7,15 +7,16 @@ const getEntityIdInputByType = async (z, bundle, type) => {
   switch (type)
   {
     case "booking":
-      resource += "bookings?since_utc=" + orez.AddDays(new Date(), -180).toJSON();
-      itemMap = async (booking) => {
+      resource += "bookings?include_guest=true&since_utc=" + orez.AddDays(new Date(), -180).toJSON();
+      itemMap = (booking) => {
           return { 
             value: booking.id, 
-            label: `${booking.guest && booking.guest.last_name ? booking.guest.first_name + " " + booking.guest.last_name : "ORG" + booking.guest_id} (${new Date(booking.arrival)} to ${new Date(booking.departure)})`
+            label: `${booking.guest && booking.guest.last_name ? booking.guest.first_name + " " + booking.guest.last_name : "ORB" + booking.id} (${new Date(booking.arrival).toDateString()} to ${new Date(booking.departure).toDateString()})`
           }; 
       };
       break;
 
+    case "contact":
     case "guest":
       resource += "guests?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
       itemMap = (guest) => { 
@@ -31,30 +32,32 @@ const getEntityIdInputByType = async (z, bundle, type) => {
       break;
 
     case "property":
-      resource = "properties";
+      resource += "properties";
       itemMap = (property) => { 
         return { value: property.id, label: property.name }; 
       };
       break;
 
     case "quote":
-      resource = "quotes?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
+      resource += "quotes?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
       itemMap = (quote) => { 
         return { value: quote.id, label: quote.name }; 
       };
       break;
 
     case "inquiry":
-      resource = "inquiries?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
+      resource += "inquiries?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
       itemMap = (inquiry) => { 
         return { value: inquiry.id, label: inquiry.name }; 
       };
       break;
   }
 
+  z.console.log("getEntityIdInputByType -> Resource", resource);
+
   return orez.GetItems(z, bundle, resource)
     .then((items) => {
-      return {
+      var field = {
         key: 'entity_id',
         label: type.charAt(0).toUpperCase() + type.substring(1) + " ID",
         type: 'integer',
@@ -63,45 +66,71 @@ const getEntityIdInputByType = async (z, bundle, type) => {
         list: false,
         altersDynamicFields: false,
       };
+
+      z.console.log("getEntityIdInputByType -> field", field);
+
+      return field;
     });
 };
 
 const getEntityIdInput = async (z, bundle) => {
-  return getEntityIdInputByType(z, bundle, bundle.inputData.entity_type);
+  if (bundle.inputData.entity_type)
+    return getEntityIdInputByType(z, bundle, bundle.inputData.entity_type);
+  else
+    return {
+      key: 'entity_id',
+      label: "Item ID",
+      type: 'integer',
+      required: true,
+      choices: [],
+      list: false,
+      altersDynamicFields: false,
+    };
 };
 
 const getFieldDefinitionEntityInputs = async (z, bundle) => {
-  return orez.GetItems(z, bundle, "v2/fielddefinitions/" + bundle.inputData.field_definition_id)
-    .then((fieldDefinitions) => {
-      if (fieldDefinitions.length > 0) {
-        const fieldDefinition = fieldDefinitions[0];
+  if (bundle.inputData.field_definition_id)
+    return orez.GetItems(z, bundle, "v2/fielddefinitions/" + bundle.inputData.field_definition_id)
+      .then((fieldDefinitions) => {
+        if (fieldDefinitions.length > 0) {
+          const fieldDefinition = fieldDefinitions[0];
 
-        if (fieldDefinition.type == "account") {
-          return [
-            { key: "entity_type", computed: true, default: "user" },
-            { key: "entity_id", computed: true, default: 1 }
-          ];
+          if (fieldDefinition.type == "account") {
+            return [
+              { key: "entity_type", computed: true, default: "user" },
+              { key: "entity_id", computed: true, default: 1 }
+            ];
+          }
+
+          var fields = [];
+
+          if (fieldDefinition.type == "contact")
+            fields.push({ key: "entity_type", computed: true, default: "guest" });
+          else
+            fields.push({ key: "entity_type", computed: true, default: fieldDefinition.type });
+
+          return getEntityIdInputByType(z, bundle, fieldDefinition.type)
+            .then((idField) => {
+              idField.helpText = `The ${fieldDefinition.type} for which to clear the "${fieldDefinition.name}" custom field.`;
+              fields[fields.length] = idField;
+
+              return fields;
+            });
         }
-
-        var fields = [];
-
-        if (fieldDefinition.type == "contact")
-          fields.push({ key: "entity_type", computed: true, default: "guest" });
-        else
-          fields.push({ key: "entity_type", computed: true, default: fieldDefinition.type });
-
-        return getEntityIdInputByType(z, bundle, fieldDefinition.type)
-          .then((idField) => {
-            idField.helpText = `The ${fieldDefinition.type} for which to clear the "${fieldDefinition.name}" custom field.`;
-            fields[fields.length] = idField;
-
-            return fields;
-          });
-      }
-      else {
-        return [];
-      }
-    });
+        else {
+          return [];
+        }
+      });
+    else
+      return {
+        key: 'entity_id',
+        label: "Item ID",
+        type: 'integer',
+        required: true,
+        choices: [],
+        list: false,
+        altersDynamicFields: false,
+      };
 };
 
 const buildPerformSubscribe = (body) => {

@@ -21,8 +21,8 @@ module.exports = {
       { key: 'name', type: 'string' },
       { key: 'code', type: 'string' },
       { key: 'full_code', type: 'string' },
-      { key: 'description', type: 'string' },      
-      { key: 'type', type: 'string' },
+      { key: 'description', type: 'string' },
+      { key: 'type', type: 'string' }
     ],
   },
   key: 'field_definition_lookup',

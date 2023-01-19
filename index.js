@@ -14,6 +14,7 @@ const customFieldAddCreate = require('./creates/custom_field_add.js');
 const customFieldRemoveCreate = require('./creates/custom_field_remove.js');
 
 // Searches
+const bookingLookup = require("./searches/booking_lookup.js");
 const guestLookup = require("./searches/guest_lookup.js");
 
 module.exports = {
@@ -34,6 +35,7 @@ module.exports = {
     [customFieldRemoveCreate.key]: customFieldRemoveCreate,
   },
   searches: {
+    [bookingLookup.key]: bookingLookup,
     [guestLookup.key]: guestLookup
   },
 };

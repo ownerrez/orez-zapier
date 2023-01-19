@@ -9,7 +9,7 @@ module.exports = {
   operation: {
     perform: lookupGuest,
     inputFields: [
-      { label: "Guest ID", key: 'id', required: true, helpText: 'The ID of the Guest to lookup.' }
+      { label: "Guest ID", key: 'id', required: true, helpText: 'The ID of the guest to lookup (E.g ORG1234 or 1234).' }
     ],
     sample: {
       id: 1,

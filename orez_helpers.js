@@ -53,7 +53,7 @@ const getEntityIdInputByType = async (z, bundle, type) => {
       break;
   }
 
-  z.console.log("getEntityIdInputByType -> Resource", resource);
+  //z.console.log("getEntityIdInputByType -> Resource", resource);
 
   return orez.GetItems(z, bundle, resource)
     .then((items) => {
@@ -67,7 +67,7 @@ const getEntityIdInputByType = async (z, bundle, type) => {
         altersDynamicFields: false,
       };
 
-      z.console.log("getEntityIdInputByType -> field", field);
+      //z.console.log("getEntityIdInputByType -> field", field);
 
       return field;
     });

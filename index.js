@@ -13,6 +13,9 @@ const tagRemoveCreate = require('./creates/tag_remove.js');
 const customFieldAddCreate = require('./creates/custom_field_add.js');
 const customFieldRemoveCreate = require('./creates/custom_field_remove.js');
 
+// Searches
+const guestLookup = require("./searches/guest_lookup.js");
+
 module.exports = {
   version: require('./package.json').version,
   platformVersion: require('zapier-platform-core').version,
@@ -30,5 +33,7 @@ module.exports = {
     [customFieldAddCreate.key]: customFieldAddCreate,
     [customFieldRemoveCreate.key]: customFieldRemoveCreate,
   },
-  searches: {},
+  searches: {
+    [guestLookup.key]: guestLookup
+  },
 };

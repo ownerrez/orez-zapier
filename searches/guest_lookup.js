@@ -11,11 +11,7 @@ module.exports = {
     inputFields: [
       { label: "Guest ID", key: 'id', required: true, helpText: 'The ID of the guest to lookup (E.g ORG1234 or 1234).' }
     ],
-    sample: {
-      id: 1,
-      first_name: 'Example',
-      last_name: 'Guest'
-    },
+    sample: orez.Types.Guest.Sample
   },
   key: 'guest_lookup',
   noun: 'Guest',

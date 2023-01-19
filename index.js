@@ -8,10 +8,11 @@ const contactUpdatedTrigger = require('./triggers/contact_updated.js');
 const fieldDefintionLookupTrigger = require('./triggers/field_definition_lookup.js');
 
 // Actions
-const tagAddCreate = require('./creates/tag_add.js');
-const tagRemoveCreate = require('./creates/tag_remove.js');
+const bookingModify = require('./creates/booking_modify.js');
 const customFieldAddCreate = require('./creates/custom_field_add.js');
 const customFieldRemoveCreate = require('./creates/custom_field_remove.js');
+const tagAddCreate = require('./creates/tag_add.js');
+const tagRemoveCreate = require('./creates/tag_remove.js');
 
 // Searches
 const bookingLookup = require("./searches/booking_lookup.js");
@@ -22,6 +23,7 @@ module.exports = {
   platformVersion: require('zapier-platform-core').version,
   authentication: authentication,
   triggers: {
+    // Zapier sorts them alphabetically by key
     [bookingCreatedTrigger.key]: bookingCreatedTrigger,
     [bookingUpdatedTrigger.key]: bookingUpdatedTrigger,
     [contactCreatedTrigger.key]: contactCreatedTrigger,
@@ -29,13 +31,16 @@ module.exports = {
     [fieldDefintionLookupTrigger.key]: fieldDefintionLookupTrigger,
   },
   creates: {
-    [tagAddCreate.key]: tagAddCreate,
-    [tagRemoveCreate.key]: tagRemoveCreate,
+    // Zapier sorts them alphabetically by key
     [customFieldAddCreate.key]: customFieldAddCreate,
     [customFieldRemoveCreate.key]: customFieldRemoveCreate,
+    [tagAddCreate.key]: tagAddCreate,
+    [tagRemoveCreate.key]: tagRemoveCreate,
+    [bookingModify.key]: bookingModify,
   },
   searches: {
+    // Zapier sorts them alphabetically by key
     [bookingLookup.key]: bookingLookup,
-    [guestLookup.key]: guestLookup
+    [guestLookup.key]: guestLookup,
   },
 };

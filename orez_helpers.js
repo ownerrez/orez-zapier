@@ -1,6 +1,6 @@
 const orez = require("./orez");
 
-const getEntityIdInputByType = async (z, bundle, type) => {
+const getEntityIdInputByType = async (z, bundle, type, fieldKey, helpText) => {
   var resource = "v2/";
   var itemMap;
 
@@ -58,13 +58,14 @@ const getEntityIdInputByType = async (z, bundle, type) => {
   return orez.GetItems(z, bundle, resource)
     .then((items) => {
       var field = {
-        key: 'entity_id',
+        key: fieldKey || 'entity_id',
         label: type.charAt(0).toUpperCase() + type.substring(1) + " ID",
         type: 'integer',
         required: true,
         choices: items.map(itemMap),
         list: false,
         altersDynamicFields: false,
+        helpText: helpText
       };
 
       //z.console.log("getEntityIdInputByType -> field", field);
@@ -153,6 +154,7 @@ const performUnsubscribe = async (z, bundle) => {
 
 module.exports = {
   GetFieldDefinitionEntityInputs: getFieldDefinitionEntityInputs,
+  GetEntityIdInputByType: getEntityIdInputByType,
   GetEntityIdInput: getEntityIdInput,
   BuildPerformSubscribe: buildPerformSubscribe,
   PerformUnsubscribe: performUnsubscribe,

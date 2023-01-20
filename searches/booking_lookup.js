@@ -1,15 +1,17 @@
 var orez = require("../orez");
 var helpers = require("../orez_helpers");
 
-const lookupGuest = async (z, bundle) => {
+const perform = async (z, bundle) => {
   return orez.GetItems(z, bundle, `v2/bookings/${orez.CleanId(bundle.inputData.id)}`);
 };
 
 module.exports = {
   operation: {
-    perform: lookupGuest,
+    perform: perform,
     inputFields: [
-      { label: "Booking ID", key: 'id', required: true, helpText: 'The ID of the booking to lookup (E.g ORB1234 or 1234).' }
+      (z, bundle) => {
+        return helpers.GetEntityIdInputByType(z, bundle, "booking", "id", "The ID of the booking to lookup (E.g ORB1234 or 1234).");
+      }
     ],
     sample: orez.Types.Booking.Sample
   },

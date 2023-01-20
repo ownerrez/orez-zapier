@@ -219,6 +219,20 @@ module.exports = {
         { key: 'phones[]is_default', type: 'boolean' },
         { key: 'phones[]number' },
       ]
+    },
+    Property: {
+      Sample: {
+        id: 1234,
+        key: "abc123",
+        name: "Example Property",
+        active: true
+      },
+      Fields: [
+        { key: "id", type: "integer" },
+        { key: "key" },
+        { key: "name" },
+        { key: "active", type: "boolean" },
+      ]
     }
   }
 };

@@ -17,6 +17,7 @@ const tagRemoveCreate = require('./creates/tag_remove.js');
 // Searches
 const bookingLookup = require("./searches/booking_lookup.js");
 const guestLookup = require("./searches/guest_lookup.js");
+const propertyLookup = require("./searches/property_lookup.js");
 
 module.exports = {
   version: require('./package.json').version,
@@ -42,5 +43,6 @@ module.exports = {
     // Zapier sorts them alphabetically by key
     [bookingLookup.key]: bookingLookup,
     [guestLookup.key]: guestLookup,
+    [propertyLookup.key]: propertyLookup,
   },
 };

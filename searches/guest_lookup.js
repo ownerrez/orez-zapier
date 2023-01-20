@@ -9,7 +9,9 @@ module.exports = {
   operation: {
     perform: lookupGuest,
     inputFields: [
-      { label: "Guest ID", key: 'id', required: true, helpText: 'The ID of the guest to lookup (E.g ORG1234 or 1234).' }
+      (z, bundle) => {
+        return helpers.GetEntityIdInputByType(z, bundle, "guest", "id", "The ID of the guest to lookup (E.g ORG1234 or 1234).");
+      }
     ],
     sample: orez.Types.Guest.Sample
   },

@@ -27,15 +27,11 @@ module.exports = {
     label: 'Modify Booking',
     description: 'Modify a booking.',
     hidden: false,
-    important: true,
   },
   operation: {
     inputFields: [
-      {
-        key: 'id',
-        label: 'Booking ID',
-        helpText: 'The ID of the booking to modify (E.g. ORB1234 or 1234).',
-        required: true
+      (z, bundle) => {
+        return helpers.GetEntityIdInputByType(z, bundle, "booking", "id", "The ID of the booking to modify (E.g ORB1234 or 1234).");
       },
       {
         key: 'cleaning_date',

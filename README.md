@@ -33,3 +33,9 @@ API_ROOT=https://api.dev.ownerreservations.com
 # Tell node not to validate personally signed cert
 NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
+
+## Licensing
+
+This integration has been released as a public repository under the [AGPLv3 License](LICENSE.md) for the express purpose of encouraging user contributions to the enhancement of this integration. This License does not grant any rights in the trademarks, service marks, or logos of any Contributor. 
+
+OwnerRez and the OwnerRez logo are [trademarks of OwnerRez](https://www.ownerreservations.com/trademark) and are protected as such.

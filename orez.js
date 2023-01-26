@@ -33,9 +33,18 @@ const cleanId = function(id) {
   return id;
 };
 
+const parseItems = function(response) {
+  if (response.json.items)
+    return response.json.items;
+  else
+    return [response.json];
+}
+
 module.exports = {
   BuildRequest: buildRequest,
   CleanId: cleanId,
+  ParseItems: parseItems,  
+
   CleanIds: function (ids) {
     for (var x in ids) {
       if (ids[x] && typeof ids[x] == "string")
@@ -71,11 +80,7 @@ module.exports = {
 
     return z.request(request).then((response) => {
       response.throwForStatus();
-
-      if (response.json.items)
-        return response.json.items;
-      else
-        return [response.json];
+      return parseItems(response);
     });
   },
   PostItem: async (z, bundle, options) => {
@@ -105,13 +110,13 @@ module.exports = {
     });
   },
 
-  MockList: (items) => {
+  MockList: (items, next_page_url) => {
     return {
       count: items.length,
       items: items,
       limit: 20,
       offset: 0,
-      next_page_url: "",
+      next_page_url: next_page_url || "",
     }
   },
 

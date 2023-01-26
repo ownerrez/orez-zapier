@@ -1,13 +1,25 @@
 var orez = require("../orez");
 
-const getFieldDefinitions = async (z, bundle) => {  
-  return orez.GetItems(z, bundle, "v2/fielddefinitions");
+const perform = async (z, bundle) => {
+  let cursor;
+  if (bundle.meta && bundle.meta.isFillingDynamicDropdown && bundle.meta.page)
+    cursor = await z.cursor.get();
+  
+  return z.request(orez.BuildRequest(cursor || "v2/fielddefinitions", "GET", bundle)).then(async (response) => {
+    response.throwForStatus();
+
+    if (response.json && response.json.next_page_url)
+      await z.cursor.set(response.json.next_page_url);
+
+    return orez.ParseItems(response);
+  });
 };
 
 module.exports = {
   operation: {
-    perform: getFieldDefinitions,
     type: 'polling',
+    canPaginate: true,
+    perform: perform,
     sample: {
       "code": "CODE1",
       "description": "sample string 2",

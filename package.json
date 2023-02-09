@@ -1,6 +1,6 @@
 {
   "name": "owner-rez",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "OwnerRez is internationally recognized as a leader in the vacation rental industry for channel management, CRM, PM, accounting, messaging and websites.",
   "main": "index.js",
   "scripts": {

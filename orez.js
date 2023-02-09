@@ -102,8 +102,12 @@ module.exports = {
     });
   },
   DeleteItem: async (z, bundle, options) => {
-    const request = buildRequest(options.resource, "DELETE", bundle, options.params);  
-    
+    var request;
+    if (typeof options == "string")
+      request = buildRequest(options, "DELETE", bundle);
+    else
+      request = buildRequest(options.resource, "DELETE", bundle, options.params);
+
     return z.request(request).then((response) => {
       response.throwForStatus();
       return { status: 'No content', status_code: 204 };

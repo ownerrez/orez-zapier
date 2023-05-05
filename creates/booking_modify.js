@@ -12,9 +12,13 @@ const perform = async (z, bundle) => {
           bundle.inputData.cleaning_date = null;
         }
 
+        var bookingId = bundle.inputData.id;
+        var patchData = bundle.inputData;
+        delete patchData.id;
+
         return orez.PatchItem(z, bundle, {
-          resource: `v2/bookings/${orez.CleanId(bundle.inputData.id)}`,
-          body: bundle.inputData
+          resource: `v2/bookings/${orez.CleanId(bookingId)}`,
+          body: patchData
         });
       }
     });

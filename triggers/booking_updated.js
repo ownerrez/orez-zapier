@@ -28,6 +28,5 @@ module.exports = {
     label: 'Booking Updated',
     description: 'Triggers when a booking is changed.',
     hidden: false,
-    important: true,
   },
 };

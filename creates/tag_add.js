@@ -36,7 +36,6 @@ module.exports = {
     label: 'Add Tag',
     description: 'Add a tag to a record.',
     hidden: false,
-    important: true,
   },
   operation: {
     inputFields: [

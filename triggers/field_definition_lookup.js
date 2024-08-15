@@ -42,6 +42,5 @@ module.exports = {
   display: {
     label: 'Field Definition Lookup',
     hidden: true,
-    important: false,
   },
 };

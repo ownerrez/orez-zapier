@@ -28,6 +28,5 @@ module.exports = {
     label: 'Contact Updated',
     description: "Triggers when a contact's information changes.",
     hidden: false,
-    important: false,
   },
 };

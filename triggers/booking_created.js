@@ -30,6 +30,5 @@ module.exports = {
     description:
       'Triggers when a new booking is created or blocked-off is added.',
     hidden: false,
-    important: true,
   },
 };

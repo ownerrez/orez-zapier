@@ -28,6 +28,5 @@ module.exports = {
     label: 'Contact Created',
     description: 'Triggers when a new contact is created.',
     hidden: false,
-    important: true,
   },
 };

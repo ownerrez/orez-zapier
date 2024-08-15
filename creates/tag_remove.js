@@ -31,7 +31,6 @@ module.exports = {
     label: 'Remove Tag',
     description: 'Remove a tag from a record.',
     hidden: false,
-    important: true,
   },
   operation: {
     inputFields: [

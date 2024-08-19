@@ -29,6 +29,7 @@ Set environment variables in the `.env` file. This file should never be committe
 AUTH_USERNAME=your@user.name
 AUTH_PASSWORD=pt_yourpersonaltoken
 API_ROOT=https://api.dev.ownerrez.com
+APP_ROOT=https://app.dev.ownerrez.com
 
 # Tell node not to validate personally signed cert
 NODE_TLS_REJECT_UNAUTHORIZED=0

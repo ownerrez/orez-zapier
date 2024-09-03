@@ -139,7 +139,7 @@ const buildPerformSubscribe = (body) => {
     const fullBody = {
       ...body,
       webhook_url: bundle.targetUrl,
-      category_type: bundle.inputData.category_type
+      category: bundle.inputData.category_type
     };
 
     return orez.PostItem(z, bundle, {

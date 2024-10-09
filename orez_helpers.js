@@ -9,46 +9,46 @@ const getEntityIdInputByType = async (z, bundle, type, fieldKey, helpText) => {
     case "booking":
       resource += "bookings?include_guest=true&since_utc=" + orez.AddDays(new Date(), -180).toJSON();
       itemMap = (booking) => {
-          return { 
-            value: booking.id, 
-            label: `${booking.guest && booking.guest.last_name ? booking.guest.first_name + " " + booking.guest.last_name : "ORB" + booking.id} (${new Date(booking.arrival).toDateString()} to ${new Date(booking.departure).toDateString()})`
-          }; 
+        return {
+          value: booking.id,
+          label: `${booking.guest && booking.guest.last_name ? booking.guest.first_name + " " + booking.guest.last_name : "ORB" + booking.id} (${new Date(booking.arrival).toDateString()} to ${new Date(booking.departure).toDateString()})`
+        };
       };
       break;
 
     case "contact":
     case "guest":
       resource += "guests?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
-      itemMap = (guest) => { 
-        return { value: guest.id, label: `${guest.first_name} ${guest.last_name}` }; 
+      itemMap = (guest) => {
+        return { value: guest.id, label: `${guest.first_name} ${guest.last_name}` };
       };
       break;
 
     case "owner":
       resource += "owners";
-      itemMap = (owner) => { 
-        return { value: owner.id, label: owner.name }; 
+      itemMap = (owner) => {
+        return { value: owner.id, label: owner.name };
       };
       break;
 
     case "property":
       resource += "properties";
-      itemMap = (property) => { 
-        return { value: property.id, label: property.name }; 
+      itemMap = (property) => {
+        return { value: property.id, label: property.name };
       };
       break;
 
     case "quote":
       resource += "quotes?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
-      itemMap = (quote) => { 
-        return { value: quote.id, label: quote.name }; 
+      itemMap = (quote) => {
+        return { value: quote.id, label: quote.name };
       };
       break;
 
     case "inquiry":
       resource += "inquiries?created_since_utc=" + orez.AddDays(new Date(), -180).toJSON();
-      itemMap = (inquiry) => { 
-        return { value: inquiry.id, label: inquiry.name }; 
+      itemMap = (inquiry) => {
+        return { value: inquiry.id, label: inquiry.name };
       };
       break;
   }
@@ -122,24 +122,25 @@ const getFieldDefinitionEntityInputs = async (z, bundle) => {
           return [];
         }
       });
-    else
-      return {
-        key: 'entity_id',
-        label: "Item ID",
-        type: 'integer',
-        required: true,
-        choices: [],
-        list: false,
-        altersDynamicFields: false,
-      };
+  else
+    return {
+      key: 'entity_id',
+      label: "Item ID",
+      type: 'integer',
+      required: true,
+      choices: [],
+      list: false,
+      altersDynamicFields: false,
+    };
 };
 
 const buildPerformSubscribe = (body) => {
   return async (z, bundle) => {
     const fullBody = {
       ...body,
-      webhook_url: bundle.targetUrl
-    }; 
+      webhook_url: bundle.targetUrl,
+      category: bundle.inputData.category_type
+    };
 
     return orez.PostItem(z, bundle, {
       resource: `v2/webhooksubscriptions`,
@@ -152,10 +153,44 @@ const performUnsubscribe = async (z, bundle) => {
   return orez.DeleteItem(z, bundle, `v2/webhooksubscriptions/${bundle.subscribeData.id}`);
 };
 
+const getWebhookCategoriesInput = async (z, bundle, type) => {
+
+  return orez.GetItems(z, bundle, `v2/webhooksubscriptions/categories`).then(
+    (items) => {
+      var item = items[0];
+      var values = [];
+      switch (type) {
+        case "property":
+          values = item.Property;
+          break;
+        case "contact":
+          values = item.Contact
+          break;
+        case "booking":
+          values = item.Booking
+          break;
+      }
+
+      var field = {
+        key: 'category_type',
+        label: "Category",
+        type: 'string',
+        required: false,
+        choices: values.map((val) => { return { value: val, label: val.charAt(0).toUpperCase() + val.substring(1) }; }),
+        list: false,
+        altersDynamicFields: true,
+        helpText: `Limit the webhooks to specific category, skip selection if you want to receive all webhooks`
+      };
+
+      return field;
+    });
+};
+
 module.exports = {
   GetFieldDefinitionEntityInputs: getFieldDefinitionEntityInputs,
   GetEntityIdInputByType: getEntityIdInputByType,
   GetEntityIdInput: getEntityIdInput,
   BuildPerformSubscribe: buildPerformSubscribe,
   PerformUnsubscribe: performUnsubscribe,
+  GetWebhookCategoriesInput: getWebhookCategoriesInput,
 };

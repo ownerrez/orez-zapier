@@ -33,7 +33,6 @@ module.exports = {
     label: 'Clear Custom Field',
     description: 'Remove any value set on a custom field.',
     hidden: false,
-    important: false,
   },
   operation: {
     inputFields: [

@@ -21,6 +21,9 @@ module.exports = {
     performUnsubscribe: helpers.PerformUnsubscribe,
     sample: orez.Types.Guest.Sample,
     outputFields: orez.Types.Guest.Fields,
+    inputFields: [(z, bundle) => {
+      return helpers.GetWebhookCategoriesInput(z, bundle, "contact");
+    }]
   },
   key: 'contact_created',
   noun: 'Contact',
@@ -28,6 +31,5 @@ module.exports = {
     label: 'Contact Created',
     description: 'Triggers when a new contact is created.',
     hidden: false,
-    important: true,
   },
 };

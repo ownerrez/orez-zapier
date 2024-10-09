@@ -44,7 +44,6 @@ module.exports = {
     label: 'Set Custom Field',
     description: 'Sets the value of a custom field on a record.',
     hidden: false,
-    important: true,
   },
   operation: {
     inputFields: [

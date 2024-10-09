@@ -20,10 +20,7 @@ module.exports = {
     }),
     performUnsubscribe: helpers.PerformUnsubscribe,
     sample: orez.Types.Guest.Sample,
-    outputFields: orez.Types.Guest.Fields,
-    inputFields: [(z, bundle) => {
-      return helpers.GetWebhookCategoriesInput(z, bundle, "contact");
-    }]
+    outputFields: orez.Types.Guest.Fields
   },
   key: 'contact_created',
   noun: 'Contact',

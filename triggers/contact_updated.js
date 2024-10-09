@@ -21,6 +21,9 @@ module.exports = {
     performUnsubscribe: helpers.PerformUnsubscribe,
     sample: orez.Types.Guest.Sample,
     outputFields: orez.Types.Guest.Fields,
+    inputFields: [(z, bundle) => {
+      return helpers.GetWebhookCategoriesInput(z, bundle, "booking");
+    }]
   },
   key: 'contact_updated',
   noun: 'Contact',

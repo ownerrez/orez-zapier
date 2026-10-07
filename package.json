@@ -14,12 +14,16 @@
     "zapier-platform-core": "15.15.0"
   },
   "devDependencies": {
-    "mocha": "^10.2.0",
+    "mocha": "^12.0.3",
     "nock": "^13.3.0",
     "should": "^13.2.0"
   },
   "private": true,
   "zapier": {
     "convertedByCLIVersion": "12.0.3"
+  },
+  "overrides": {
+    "form-data": "4.0.6",
+    "lodash": "4.18.1"
   }
 }

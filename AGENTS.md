@@ -65,7 +65,7 @@ A bug fix adds a test that fails on the pre-fix code. An outcome-changing branch
 
 - Default branch is `main`. Branch `<issue>-<short-desc>`: lowercase, hyphenated, ≤6 words.
 - Commit subjects end with the issue number: `Handle new field #12345`.
-- A release bumps `version` in `package.json` (and `package-lock.json`) before `zapier push`.
+- A release follows [README.md § Publishing](README.md#publishing): bump `version`, add a `CHANGELOG.md` entry, `zapier push`, test the draft, promote.
 
 ## Code Style
 

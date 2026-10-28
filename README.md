@@ -14,6 +14,8 @@ Integration tests should only be included if basic auth environment variables ar
 
 ### Running Tests
 
+Install the CLI with `npm i -g zapier-platform-cli` (or prefix commands with `npx zapier-platform-cli` instead of `zapier`), then run `zapier login` once.
+
 To run all tests, use:
 ```powershell
 zapier test --skip-validate
@@ -34,6 +36,28 @@ APP_ROOT=https://app.dev.ownerrez.com
 # Tell node not to validate personally signed cert
 NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
+
+- `AUTH_PASSWORD` is a Personal Access Token created at [Developer/API Settings](https://app.dev.ownerrez.com/settings/api) on the environment `API_ROOT` points to. `AUTH_USERNAME` is the email of the user who owns it. A token from another environment returns 401 `invalid_token`.
+- Tests that use `z.cursor` (e.g. `field_definition_lookup`) call Zapier's RPC API and need `ZAPIER_DEPLOY_KEY`. `zapier test` supplies it from your `zapier login` credentials; plain `mocha` does not.
+
+## Publishing
+
+`package.json` `version` is the Zapier app version. `zapier push` with the version that is already promoted overwrites the live app for every user, so always bump first.
+
+1. Bump the version: `npm version <x.y.z> --no-git-tag-version`.
+2. Add a `## <x.y.z>` entry to [CHANGELOG.md](CHANGELOG.md) describing user-facing changes. `zapier promote` refuses to run without one.
+3. `zapier push`. The version uploads as a draft with no users; `zapier versions` shows its state.
+4. Test the draft in the Zapier editor. Draft versions are visible only to the integration's team members; pick the version in each OwnerRez step's version selector. Use the Zapier team account whose connection points at an OwnerRez dev user, and check:
+   - Connecting an account (OAuth).
+   - Each trigger: "Test trigger" loads samples, and with the Zap turned on, a matching change in OwnerRez runs the Zap.
+   - Each action: dynamic dropdowns load, and the action changes the record. Tag and custom-field actions change nothing on a second run.
+   - Each search, with a prefixed ID (e.g. `ORB1234`).
+5. Merge the PR.
+6. `zapier promote <x.y.z>`. New users get this version. Promoting a version without breaking changes also starts a migration of all Zaps from the previously promoted version; `zapier jobs` shows its progress, and `zapier migrate` fails until it completes.
+7. Monitor with `zapier logs --type=http --status=error` and the Monitoring page in the Zapier developer platform.
+8. Roll back with `zapier migrate <x.y.z> <previous> 100`.
+
+`promote` and `migrate` ask for confirmation. In a non-interactive shell (CI, agents) add `--yes`, or the prompt fails with `ERR_USE_AFTER_CLOSE`.
 
 ## Licensing
 
